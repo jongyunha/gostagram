@@ -32,6 +32,7 @@ func main() {
 	e := app.Routes()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	log.Printf("Listening %s:%s", os.Getenv("SERVER_ADDRESS"), os.Getenv("SERVER_PORT"))
