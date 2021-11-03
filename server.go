@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 
+	_ "gostagram/docs"
+
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -23,10 +25,10 @@ func sanityCheck() {
 	}
 }
 
-// @title gostagram Swagger API
+// @title Gostagram Swagger API
 // @version 1.0
 // @host 127.0.0.1:4000
-// @BasePath /
+// @BasePath /api/v1
 func main() {
 	sanityCheck()
 	e := app.Routes()

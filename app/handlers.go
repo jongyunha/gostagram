@@ -14,9 +14,11 @@ type InstaHandler struct {
 
 // @Summary Instagram get posts by user
 // @Description Instagram get posts by user
-// @Accept  string
+// @Produce  json
+// @Param   user_id     query    string     true        "user id"
+// @Param   access_token     query    string     true        "access token"
 // @Success 200 {object} dto.InstaResponse
-// @Router  / [get]
+// @Router  /api/v1/instagram/posts [get]
 func (sh InstaHandler) GetPosts(c echo.Context) error {
 	userId := c.QueryParam("user_id")
 	accessToken := c.QueryParam("access_token")
@@ -28,10 +30,16 @@ func (sh InstaHandler) GetPosts(c echo.Context) error {
 	if err := req.Validate(); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
+
 	res, err := sh.Service.GetPosts(req)
+
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
 	return c.JSON(http.StatusOK, res)
 }
+
+// func (sh InstaHandler) GetChildren(c echo.Context) error {
+//
+// }

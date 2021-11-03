@@ -1,0 +1,117 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "gostagram Swagger API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:4000",
+    "basePath": "/",
+    "paths": {
+        "/api/v1/instagram/posts": {
+            "get": {
+                "description": "Instagram get posts by user",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Instagram get posts by user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "access token",
+                        "name": "access_token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.InstaResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.Children": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.ChildrenObj"
+                    }
+                }
+            }
+        },
+        "domain.ChildrenObj": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Instagram": {
+            "type": "object",
+            "properties": {
+                "caption": {
+                    "type": "string"
+                },
+                "children": {
+                    "$ref": "#/definitions/domain.Children"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "media_type": {
+                    "type": "string"
+                },
+                "media_url": {
+                    "type": "string"
+                },
+                "permalink": {
+                    "type": "string"
+                },
+                "thumbnail_url": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.InstagramData": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Instagram"
+                    }
+                }
+            }
+        },
+        "dto.InstaResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/domain.InstagramData"
+                }
+            }
+        }
+    }
+}
