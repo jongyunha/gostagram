@@ -1,19 +1,6 @@
-# Echo framework boilerplate with docker-compose
-
-## use stack
-
-- echo
-- postgres driver
-- docker
-- gorm
-- goenv
+# Gostagram
 
 ## Step
 
-- write .env file
-- docker-compose up --build -d
-
-## TODO
-
-- [ ] docker swag init
-- [ ] support nosql
+-   write .env file
+-   docker-compose up --build -d
