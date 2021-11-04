@@ -70,37 +70,6 @@ func (s DefaultInstaService) GetChild(req dto.InstaChildRequest) (*dto.InstaChil
 	return &res, nil
 }
 
-func updateChildern(insta *domain.InstagramData, accessToken string) error {
-	for _, data := range insta.Data {
-		if len(data.Children.Data) > 0 {
-			var children = make([]domain.Child, 0)
-			wg.Add(len(data.Children.Data))
-			for _, c := range data.Children.Data {
-				go func() {
-					mutex.Lock()
-					defer mutex.Unlock()
-					var child domain.Child
-					query := fmt.Sprintf("%s/%s/%s=%s", GRAPH_URL, c.Id, CHILDREN_QUERY, accessToken)
-					resp, err := http.Get(query)
-					if err != nil {
-						log.Fatal(err.Error())
-					}
-
-					defer resp.Body.Close()
-					if err := json.NewDecoder(resp.Body).Decode(&child); err != nil {
-						log.Fatal(err.Error())
-					}
-					children = append(children, child)
-					wg.Done()
-				}()
-			}
-			wg.Wait()
-			insta.Data[0].Children.Data = children
-		}
-	}
-	return nil
-}
-
 func NewInstaService() InstaService {
 	return &DefaultInstaService{}
 }
