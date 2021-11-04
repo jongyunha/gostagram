@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gostagram/app"
 	"log"
+	"net/http"
 	"os"
 
 	_ "gostagram/docs"
@@ -34,7 +35,10 @@ func main() {
 	e := app.Routes()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	}))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	log.Printf("Listening %s:%s", os.Getenv("SERVER_ADDRESS"), os.Getenv("SERVER_PORT"))
