@@ -1,16 +1,24 @@
-basePath: /
+basePath: /api/v1
 definitions:
+  domain.Child:
+    properties:
+      id:
+        type: string
+      media_type:
+        type: string
+      media_url:
+        type: string
+      permalink:
+        type: string
+      thumbnail_url:
+        type: string
+    type: object
   domain.Children:
     properties:
       data:
         items:
-          $ref: '#/definitions/domain.ChildrenObj'
+          $ref: '#/definitions/domain.Child'
         type: array
-    type: object
-  domain.ChildrenObj:
-    properties:
-      id:
-        type: string
     type: object
   domain.Instagram:
     properties:
@@ -33,24 +41,59 @@ definitions:
       username:
         type: string
     type: object
-  domain.InstagramData:
+  dto.InstaChildResponse:
+    properties:
+      id:
+        type: string
+      media_type:
+        type: string
+      media_url:
+        type: string
+      permalink:
+        type: string
+      thumbnail_url:
+        type: string
+    type: object
+  dto.InstaResponse:
     properties:
       data:
         items:
           $ref: '#/definitions/domain.Instagram'
         type: array
     type: object
-  dto.InstaResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.InstagramData'
-    type: object
 host: 127.0.0.1:4000
 info:
   contact: {}
-  title: gostagram Swagger API
+  title: Gostagram Swagger API
   version: "1.0"
 paths:
+  /api/v1/instagram/child:
+    get:
+      description: Instagram get child post by parrent id
+      parameters:
+      - description: user id
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - description: access token
+        in: query
+        name: access_token
+        required: true
+        type: string
+      - description: child id
+        in: query
+        name: child_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.InstaChildResponse'
+      summary: Instagram get child post by parrent id
   /api/v1/instagram/posts:
     get:
       description: Instagram get posts by user

@@ -40,6 +40,28 @@ func (sh InstaHandler) GetPosts(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-// func (sh InstaHandler) GetChildren(c echo.Context) error {
-//
-// }
+// @Summary Instagram get child post by parrent id
+// @Description Instagram get child post by parrent id
+// @Produce  json
+// @Param   user_id     query    string     true        "user id"
+// @Param   access_token     query    string     true        "access token"
+// @Param   child_id     query    string     true        "child id"
+// @Success 200 {object} dto.InstaChildResponse
+// @Router  /api/v1/instagram/child [get]
+func (sh InstaHandler) GetChild(c echo.Context) error {
+	userId := c.QueryParam("user_id")
+	accessToken := c.QueryParam("access_token")
+	childId := c.QueryParam("child_id")
+
+	var req dto.InstaChildRequest
+	req.UserId = userId
+	req.AccessToken = accessToken
+	req.ChildId = childId
+	res, err := sh.Service.GetChild(req)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	return c.JSON(http.StatusOK, res)
+}

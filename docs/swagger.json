@@ -1,13 +1,53 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "gostagram Swagger API",
+        "title": "Gostagram Swagger API",
         "contact": {},
         "version": "1.0"
     },
     "host": "127.0.0.1:4000",
-    "basePath": "/",
+    "basePath": "/api/v1",
     "paths": {
+        "/api/v1/instagram/child": {
+            "get": {
+                "description": "Instagram get child post by parrent id",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Instagram get child post by parrent id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "access token",
+                        "name": "access_token",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "child id",
+                        "name": "child_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.InstaChildResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/instagram/posts": {
             "get": {
                 "description": "Instagram get posts by user",
@@ -43,22 +83,34 @@
         }
     },
     "definitions": {
+        "domain.Child": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "media_type": {
+                    "type": "string"
+                },
+                "media_url": {
+                    "type": "string"
+                },
+                "permalink": {
+                    "type": "string"
+                },
+                "thumbnail_url": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.Children": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.ChildrenObj"
+                        "$ref": "#/definitions/domain.Child"
                     }
-                }
-            }
-        },
-        "domain.ChildrenObj": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
                 }
             }
         },
@@ -94,14 +146,23 @@
                 }
             }
         },
-        "domain.InstagramData": {
+        "dto.InstaChildResponse": {
             "type": "object",
             "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Instagram"
-                    }
+                "id": {
+                    "type": "string"
+                },
+                "media_type": {
+                    "type": "string"
+                },
+                "media_url": {
+                    "type": "string"
+                },
+                "permalink": {
+                    "type": "string"
+                },
+                "thumbnail_url": {
+                    "type": "string"
                 }
             }
         },
@@ -109,7 +170,10 @@
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.InstagramData"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Instagram"
+                    }
                 }
             }
         }

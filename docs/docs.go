@@ -23,6 +23,46 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/instagram/child": {
+            "get": {
+                "description": "Instagram get child post by parrent id",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Instagram get child post by parrent id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "access token",
+                        "name": "access_token",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "child id",
+                        "name": "child_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.InstaChildResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/instagram/posts": {
             "get": {
                 "description": "Instagram get posts by user",
@@ -58,22 +98,34 @@ var doc = `{
         }
     },
     "definitions": {
+        "domain.Child": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "media_type": {
+                    "type": "string"
+                },
+                "media_url": {
+                    "type": "string"
+                },
+                "permalink": {
+                    "type": "string"
+                },
+                "thumbnail_url": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.Children": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.ChildrenObj"
+                        "$ref": "#/definitions/domain.Child"
                     }
-                }
-            }
-        },
-        "domain.ChildrenObj": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
                 }
             }
         },
@@ -109,14 +161,23 @@ var doc = `{
                 }
             }
         },
-        "domain.InstagramData": {
+        "dto.InstaChildResponse": {
             "type": "object",
             "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Instagram"
-                    }
+                "id": {
+                    "type": "string"
+                },
+                "media_type": {
+                    "type": "string"
+                },
+                "media_url": {
+                    "type": "string"
+                },
+                "permalink": {
+                    "type": "string"
+                },
+                "thumbnail_url": {
+                    "type": "string"
                 }
             }
         },
@@ -124,7 +185,10 @@ var doc = `{
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.InstagramData"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Instagram"
+                    }
                 }
             }
         }
@@ -144,9 +208,9 @@ type swaggerInfo struct {
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
 	Host:        "127.0.0.1:4000",
-	BasePath:    "/",
+	BasePath:    "/api/v1",
 	Schemes:     []string{},
-	Title:       "gostagram Swagger API",
+	Title:       "Gostagram Swagger API",
 	Description: "",
 }
 

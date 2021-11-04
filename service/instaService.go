@@ -7,13 +7,19 @@ import (
 	"gostagram/dto"
 	"log"
 	"net/http"
+	"sync"
 )
+
+var wg sync.WaitGroup
+var mutex sync.Mutex
 
 var GRAPH_URL string = "https://graph.instagram.com"
 var MEIDA_QUERY string = "media?fields=caption,id,media_type,media_url,username,timestamp,permalink,thumbnail_url,children&access_token"
+var CHILDREN_QUERY string = "?fields=children,id,media_type,media_url,thumbnail_url&access_token"
 
 type InstaService interface {
 	GetPosts(req dto.InstaRequest) (*dto.InstaResponse, error)
+	GetChild(req dto.InstaChildRequest) (*dto.InstaChildResponse, error)
 }
 
 type DefaultInstaService struct {
@@ -35,9 +41,64 @@ func (s DefaultInstaService) GetPosts(req dto.InstaRequest) (*dto.InstaResponse,
 		log.Println(err.Error())
 		return nil, err
 	}
-	res.Data = insta
 
+	res.Data = insta.Data
 	return &res, nil
+}
+
+func (s DefaultInstaService) GetChild(req dto.InstaChildRequest) (*dto.InstaChildResponse, error) {
+	var child domain.Child
+
+	query := fmt.Sprintf("%s/%s/%s=%s", GRAPH_URL, req.ChildId, CHILDREN_QUERY, req.AccessToken)
+	resp, err := http.Get(query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	if err := json.NewDecoder(resp.Body).Decode(&child); err != nil {
+		return nil, err
+	}
+
+	var res dto.InstaChildResponse
+	res = dto.InstaChildResponse{
+		Id:           child.Id,
+		MediaType:    child.MediaType,
+		MediaURL:     child.MediaURL,
+		ThumbnailURL: child.ThumbnailURL,
+	}
+	return &res, nil
+}
+
+func updateChildern(insta *domain.InstagramData, accessToken string) error {
+	for _, data := range insta.Data {
+		if len(data.Children.Data) > 0 {
+			var children = make([]domain.Child, 0)
+			wg.Add(len(data.Children.Data))
+			for _, c := range data.Children.Data {
+				go func() {
+					mutex.Lock()
+					defer mutex.Unlock()
+					var child domain.Child
+					query := fmt.Sprintf("%s/%s/%s=%s", GRAPH_URL, c.Id, CHILDREN_QUERY, accessToken)
+					resp, err := http.Get(query)
+					if err != nil {
+						log.Fatal(err.Error())
+					}
+
+					defer resp.Body.Close()
+					if err := json.NewDecoder(resp.Body).Decode(&child); err != nil {
+						log.Fatal(err.Error())
+					}
+					children = append(children, child)
+					wg.Done()
+				}()
+			}
+			wg.Wait()
+			insta.Data[0].Children.Data = children
+		}
+	}
+	return nil
 }
 
 func NewInstaService() InstaService {

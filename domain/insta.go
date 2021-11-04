@@ -17,9 +17,13 @@ type InstagramData struct {
 }
 
 type Children struct {
-	Data []ChildrenObj `json:"data"`
+	Data []Child `json:"data"`
 }
 
-type ChildrenObj struct {
-	Id string `json:"id"`
+type Child struct {
+	Id           string `json:"id"`
+	MediaType    string `json:"media_type"`
+	MediaURL     string `json:"media_url"`
+	Permalink    string `json:"permalink"`
+	ThumbnailURL string `json:"thumbnail_url"`
 }

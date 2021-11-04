@@ -10,7 +10,7 @@ COPY go.sum ./
 
 RUN go mod download
 
-EXPOSE 4000
+EXPOSE 4200
 
 COPY ./ ./
 

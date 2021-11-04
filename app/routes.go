@@ -11,5 +11,6 @@ func Routes() *echo.Echo {
 
 	instaHandler := InstaHandler{Service: service.DefaultInstaService{}}
 	e.GET("/api/v1/instagram/posts", instaHandler.GetPosts)
+	e.GET("/api/v1/instagram/child", instaHandler.GetChild)
 	return e
 }

@@ -11,7 +11,29 @@ type InstaRequest struct {
 }
 
 type InstaResponse struct {
-	Data domain.InstagramData `json:"data"`
+	Data []domain.Instagram `json:"data"`
+}
+
+type InstaChildRequest struct {
+	UserId      string `json:"user_id"`
+	AccessToken string `json:"access_token"`
+	ChildId     string `json:"child_id"`
+}
+
+type InstaChildResponse struct {
+	Id           string `json:"id"`
+	MediaType    string `json:"media_type"`
+	MediaURL     string `json:"media_url"`
+	Permalink    string `json:"permalink"`
+	ThumbnailURL string `json:"thumbnail_url"`
+}
+
+type Children struct {
+	Data []ChildrenObj `json:"data"`
+}
+
+type ChildrenObj struct {
+	Id string `json:"id"`
 }
 
 func (i InstaRequest) Validate() error {
